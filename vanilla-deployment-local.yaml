@@ -25,20 +25,20 @@ spec:
         image: itzg/minecraft-server:latest
         resources:
           limits:
-            memory: 2Gi
+            memory: 4Gi
           requests:
             memory: 1.5Gi
         env:
           - name:  EULA
             value: 'TRUE'
           - name: VERSION
-            value: 1.12.2
+            value: 1.16.5
           - name: MODE
-            value: creative
+            value: survival
           - name: MOTD
-            value: What should be an older version
+            value: Just a genaric vanilla world
           - name: ALLOW_FLIGHT
-            value: 'TRUE'
+            value: 'false'
         ports:
         - containerPort: 25565
           name: minecraft
