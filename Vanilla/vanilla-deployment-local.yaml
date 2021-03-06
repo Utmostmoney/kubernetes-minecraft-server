@@ -2,26 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: minecraft-server
+  name: vanilla-minecraft-server
   namespace: minecraft
   labels:
-    app: minecraft-server
+    app: vanilla-minecraft-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: minecraft-server
+      app: vanilla-minecraft-server
   template:
     metadata:
       labels:
-        app: minecraft-server
+        app: vanilla-minecraft-server
     spec:
       volumes:
       - name: minecraft-data
         persistentVolumeClaim:
           claimName: minecraft-data-pvc
       containers:
-      - name: minecraft-server
+      - name: vanilla-minecraft-server
         image: itzg/minecraft-server:latest
         resources:
           limits:
