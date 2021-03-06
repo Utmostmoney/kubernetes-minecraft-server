@@ -14,7 +14,7 @@ spec:
   storageClassName: local-storage
   local:
     # Edit this to be an actual path on your server's filesystem
-    path: /mnt/local-volumes/minecraft 
+    path: /mnt/local-volumes/minecraft_vanilla 
   nodeAffinity:
     required:
       nodeSelectorTerms:
