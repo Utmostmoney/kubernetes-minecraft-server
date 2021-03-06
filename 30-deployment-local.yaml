@@ -31,10 +31,12 @@ spec:
         env:
           - name:  EULA
             value: 'TRUE'
+          - name: VERSION
+            value: 1.12.2
           - name: MODE
             value: creative
           - name: MOTD
-            value: Your super-cool minecraft server
+            value: What should be an older version
           - name: ALLOW_FLIGHT
             value: 'TRUE'
         ports:
