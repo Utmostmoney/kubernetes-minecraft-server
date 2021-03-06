@@ -37,6 +37,8 @@ spec:
             value: survival
           - name: MOTD
             value: Just a genaric vanilla world
+          - name: OPS
+            value: UtmostMoney
           - name: ALLOW_FLIGHT
             value: 'false'
         ports:
