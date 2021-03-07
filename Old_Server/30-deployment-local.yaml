@@ -17,9 +17,9 @@ spec:
         app: older-minecraft-server
     spec:
       volumes:
-      - name: minecraft-data
+      - name: old-minecraft-data
         persistentVolumeClaim:
-          claimName: minecraft-data-pvc
+          claimName: old-minecraft-data-pvc
       containers:
       - name: older-minecraft-server
         image: itzg/minecraft-server:latest
@@ -32,11 +32,11 @@ spec:
           - name:  EULA
             value: 'TRUE'
           - name: VERSION
-            value: 1.16.5
+            value: 1.12.2
           - name: MODE
             value: survival
           - name: MOTD
-            value: Just a genaric vanilla world
+            value: Just an old vanilla world
           - name: OPS
             value: UtmostMoney
           - name: ALLOW_FLIGHT
@@ -45,7 +45,7 @@ spec:
         - containerPort: 25565
           name: minecraft
         volumeMounts:
-          - name: minecraft-data
+          - name: old-minecraft-data
             mountPath:  /data
         readinessProbe:
           exec:
