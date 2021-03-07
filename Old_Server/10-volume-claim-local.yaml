@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: minecraft-data-pvc
+  name: old-minecraft-data-pvc
   namespace: minecraft
 spec:
   storageClassName: local-storage
