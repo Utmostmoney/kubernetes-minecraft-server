@@ -1,0 +1,126 @@
+# This should be able to do the full deployment of the server without 
+# using all the other files individually 
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: old-minecraft-data-pvc
+  namespace: minecraft
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: old-minecraft-data
+  namespace: minecraft
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  local:
+    # Edit this to be an actual path on your server's filesystem
+    path: /mnt/local-volumes/minecraft-old 
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - dietpi # Edit this to be an actual kubernetes name of your server
+
+---
+
+# docker run -d -it -v /path/on/host:/data -e EULA=TRUE -p 25565:25565 --name mc itzg/minecraft-server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: older-minecraft-server
+  namespace: minecraft
+  labels:
+    app: older-minecraft-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: older-minecraft-server
+  template:
+    metadata:
+      labels:
+        app: older-minecraft-server
+    spec:
+      volumes:
+      - name: old-minecraft-data
+        persistentVolumeClaim:
+          claimName: old-minecraft-data-pvc
+      containers:
+      - name: older-minecraft-server
+        image: itzg/minecraft-server:latest
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            memory: 1.5Gi
+        env:
+          - name:  EULA
+            value: 'TRUE'
+          - name: VERSION
+            value: 1.12.2
+          - name: MODE
+            value: survival
+          - name: MOTD
+            value: Just an old vanilla world
+          - name: OPS
+            value: UtmostMoney
+          - name: ALLOW_FLIGHT
+            value: 'false'
+        ports:
+        - containerPort: 25565
+          name: minecraft
+        volumeMounts:
+          - name: old-minecraft-data
+            mountPath:  /data
+        readinessProbe:
+          exec:
+            command:
+            - mcstatus
+            - 127.0.0.1
+            - ping
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        livenessProbe:
+          exec:
+            command:
+            - mcstatus
+            - 127.0.0.1
+            - ping
+          initialDelaySeconds: 30
+          periodSeconds: 30
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: older-minecraft-server
+  namespace: minecraft
+  labels:
+    app: older-minecraft-server
+spec:
+  type: NodePort
+  ports:
+    - port: 25565
+      nodePort: 30565
+  selector:
+    app: older-minecraft-server
