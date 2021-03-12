@@ -1,3 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  minecraft
+
+---
+
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
